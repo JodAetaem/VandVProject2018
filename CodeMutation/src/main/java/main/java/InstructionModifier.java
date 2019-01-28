@@ -11,22 +11,23 @@ public class InstructionModifier {
     public static void main(String... args) throws Exception {
         ClassPool pool = ClassPool.getDefault();
 
-        final String folder = "./manipulation-target/target/classes/";
-        final String folder2 = "./zboui";
+        final String folder = "./SourceCode/target/classes/";
+        final String folder2 = "./SourceModifiedCode/target/classes/";
         pool.appendClassPath(folder);
 
-        CtClass functions = pool.get("m2.vv.tutorial.Functions");
+        CtClass functions = pool.get("MathOperation");
 
-        CtMethod twice = functions.getDeclaredMethod("twiceplusone");
+        CtMethod twice = functions.getDeclaredMethod("add");
 
         CodeAttribute codeAttribute = twice.getMethodInfo().getCodeAttribute();
         byte[] code = codeAttribute.getCode();
         for(int i = 0; i< code.length; i++) {
-            if(code[i] == Opcode.DMUL) {
+            System.out.println("Cherche " + Opcode.DADD + " trouvé :" + code[i]);
+            if(code[i] == Opcode.IADD) {
                 // This can be done since there is no change in the stack
                 // or local variables.
                 // For more complex transformations check CodeConverter and ExprEditor
-                code[i] = Opcode.DADD;
+                code[i] = Opcode.DSUB;
             }
         }
 
