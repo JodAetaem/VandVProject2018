@@ -1,36 +1,55 @@
 package main.java;
 
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtMethod;
+import javassist.*;
 import javassist.bytecode.CodeAttribute;
 import javassist.bytecode.Opcode;
 
+import java.io.IOException;
+import java.util.List;
+
 public class InstructionModifier {
 
-    public static void main(String... args) throws Exception {
+    /***
+     * Handle the change from add to sub
+     * @param FunctionName
+     * @throws NotFoundException
+     * @throws CannotCompileException
+     * @throws IOException
+     */
+    public void addToSub(List<String> ListFunctionName) throws NotFoundException, CannotCompileException, IOException {
         ClassPool pool = ClassPool.getDefault();
 
-        final String folder = "./SourceCode/target/classes/";
-        final String folder2 = "./SourceModifiedCode/target/classes/";
-        pool.appendClassPath(folder);
+        final String inputFolder = "./SourceCode/target/classes/";
+        final String outputFolder = "./SourceModifiedCode/target/classes/";
+        //Chose the folder where the sources are
+        pool.appendClassPath(inputFolder);
 
+        // select the class to change
         CtClass functions = pool.get("MathOperation");
+        //select the function to change
+        for (String FunctionName : ListFunctionName) {
+            CtMethod twice = functions.getDeclaredMethod(FunctionName);
 
-        CtMethod twice = functions.getDeclaredMethod("add");
-
-        CodeAttribute codeAttribute = twice.getMethodInfo().getCodeAttribute();
-        byte[] code = codeAttribute.getCode();
-        for(int i = 0; i< code.length; i++) {
-            System.out.println("Cherche " + Opcode.DADD + " trouvé :" + code[i]);
-            if(code[i] == Opcode.IADD) {
-                // This can be done since there is no change in the stack
-                // or local variables.
-                // For more complex transformations check CodeConverter and ExprEditor
-                code[i] = Opcode.DSUB;
+            CodeAttribute codeAttribute = twice.getMethodInfo().getCodeAttribute();
+            byte[] code = codeAttribute.getCode();
+            for (int i = 0; i < code.length; i++) {
+                switch (code[i]) {
+                    case Opcode.IADD:       //int
+                        code[i] = Opcode.ISUB;
+                        break;
+                    case Opcode.FADD:       // float
+                        code[i] = Opcode.FSUB;
+                        break;
+                    case Opcode.DADD:       // double
+                        code[i] = Opcode.DSUB;
+                        break;
+                    case Opcode.LADD:       // long
+                        code[i] = Opcode.LSUB;
+                        break;
+                }
             }
         }
 
-        functions.writeFile(folder2);
+        functions.writeFile(outputFolder);
     }
 }
