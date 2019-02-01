@@ -13,15 +13,16 @@ public class Main {
         InstructionModifier IM = new InstructionModifier();
         try {
 
+            // Modification de la class source
             List<String> AllFunctionoToModify = new ArrayList<String>();
             AllFunctionoToModify.add("add");
             AllFunctionoToModify.add("addDouble");
 
+            IM.addToSub(AllFunctionoToModify);
+
+            // Execution des tests
             TestExecutor te = new TestExecutor();
             te.executeTestFromADistance();
-
-
-            IM.addToSub(AllFunctionoToModify);
 
             System.out.println("Fin de l'execution du programme");
 
