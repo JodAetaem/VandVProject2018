@@ -5,6 +5,7 @@ import javassist.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class _MainRunner {
 
@@ -23,6 +24,7 @@ public class _MainRunner {
             // Modification de la class source
             List<String> AllFunctionsToModify = new ArrayList<String>();
             AllFunctionsToModify.add("add");
+            AllFunctionsToModify.add("substract");
             //AllFunctionoToModify.add("addDouble");
 
             // Execution des tests
@@ -35,7 +37,21 @@ public class _MainRunner {
 
             //Modification de classes
             System.out.println("\nModifications des + en -");
-            IM.addToSub(AllFunctionsToModify);
+            IM.addToSub("./"+defaultPathToImplemClasses,"./"+defaultPathToModifiedImplemClasses,AllFunctionsToModify);
+
+            //Réécritures des tests
+            IM.rewriter("./" + defaultPathToTestClasses,
+                    "./" + defaultPathToModifiedTestClasses,
+                    testsClasses);
+
+            System.out.println("TESTS APRES LES MODIFICATIONS");
+            te.executeTestFromADistance(ABSOLUTE_PATH_TO_PROJECT + defaultPathToModifiedTestClasses,
+                    ABSOLUTE_PATH_TO_PROJECT + defaultPathToModifiedImplemClasses, testsClasses);
+
+
+            //Modification de classes
+            System.out.println("\nModifications des - en +");
+            IM.subToAdd("./"+ defaultPathToImplemClasses,"./"+defaultPathToModifiedImplemClasses,AllFunctionsToModify);
 
             //Réécritures des tests
             IM.rewriter("./" + defaultPathToTestClasses,
