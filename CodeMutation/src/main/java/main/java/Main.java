@@ -13,16 +13,20 @@ public class Main {
         InstructionModifier IM = new InstructionModifier();
         try {
 
+            String pathTestClasses = "/home/istic-larzilliere/Documents/VV/Project2019/SourceCode/target/test-classes/";
+            String pathClasses = "/home/istic-larzilliere/Documents/VV/Project2019/SourceCode/target/classes/";
+
             // Modification de la class source
             List<String> AllFunctionoToModify = new ArrayList<String>();
             AllFunctionoToModify.add("add");
             AllFunctionoToModify.add("addDouble");
 
-            IM.addToSub(AllFunctionoToModify);
-
             // Execution des tests
             TestExecutor te = new TestExecutor();
-            te.executeTestFromADistance();
+            te.executeTestFromADistance(pathTestClasses,pathClasses);
+
+            IM.addToSub(AllFunctionoToModify);
+
 
             System.out.println("Fin de l'execution du programme");
 
@@ -35,6 +39,7 @@ public class Main {
         } catch (ClassNotFoundException e) {
             // ERREUR EXECUTION TEST A GERER
             System.out.println("Erreur lors du chargement de la classe de test: " + e.getMessage());
+            e.printStackTrace();
         }
 
     }

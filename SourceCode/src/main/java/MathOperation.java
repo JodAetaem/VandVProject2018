@@ -7,6 +7,10 @@ public class MathOperation {
         return first + second;
     }
 
+    public double addDouble(double first, double second) {
+        return first + second;
+    }
+
     public int substract(int first, int second) {
         int result = first - second;
         return result;

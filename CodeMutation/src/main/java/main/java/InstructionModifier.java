@@ -11,7 +11,7 @@ public class InstructionModifier {
 
     /***
      * Handle the change from add to sub
-     * @param FunctionName
+     * @param ListFunctionName : la liste qui contient le nom des fonctions
      * @throws NotFoundException
      * @throws CannotCompileException
      * @throws IOException
@@ -49,7 +49,6 @@ public class InstructionModifier {
                 }
             }
         }
-
         functions.writeFile(outputFolder);
     }
 }
