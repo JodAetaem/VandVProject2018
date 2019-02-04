@@ -16,13 +16,13 @@ public class InstructionModifier {
      * @throws CannotCompileException
      * @throws IOException
      */
-    public void addToSub(List<String> ListFunctionName) throws NotFoundException, CannotCompileException, IOException {
+    public void addToSub(String pathToSourceClasses, String pathToOutputFolder, List<String> ListFunctionName) throws NotFoundException, CannotCompileException, IOException {
         ClassPool pool = ClassPool.getDefault();
 
-        final String inputFolder = "./SourceCode/target/classes/";
-        final String outputFolder = "./SourceModifiedCode/target/classes/";
+        //final String inputFolder = "./SourceCode/target/classes/";
+        //final String outputFolder = "./SourceModifiedCode/target/classes/";
         //Choose the folder where the sources are
-        pool.appendClassPath(inputFolder);
+        pool.appendClassPath(pathToSourceClasses);
 
         // select the class to change
         CtClass functions = pool.get("MathOperation");
@@ -49,8 +49,52 @@ public class InstructionModifier {
                 }
             }
         }
-        functions.writeFile(outputFolder);
-        //rewriter();
+        functions.writeFile(pathToOutputFolder);
+        functions.defrost();
+    }
+
+    /***
+     * Handle the change from sub to add
+     * @param ListFunctionName : la liste qui contient le nom des fonctions
+     * @throws NotFoundException
+     * @throws CannotCompileException
+     * @throws IOException
+     */
+    public void subToAdd(String pathToSourceClasses, String pathToOutputFolder, List<String> ListFunctionName) throws NotFoundException, CannotCompileException, IOException {
+        ClassPool pool = ClassPool.getDefault();
+//
+//        final String inputFolder = "./SourceCode/target/classes/";
+//        final String outputFolder = "./SourceModifiedCode/target/classes/";
+        //Choose the folder where the sources are
+        pool.appendClassPath(pathToSourceClasses);
+
+        // select the class to change
+        CtClass functions = pool.get("MathOperation");
+        //select the function to change
+        for (String FunctionName : ListFunctionName) {
+            CtMethod twice = functions.getDeclaredMethod(FunctionName);
+
+            CodeAttribute codeAttribute = twice.getMethodInfo().getCodeAttribute();
+            byte[] code = codeAttribute.getCode();
+            for (int i = 0; i < code.length; i++) {
+                switch (code[i]) {
+                    case Opcode.ISUB:       //int
+                        code[i] = Opcode.IADD;
+                        break;
+                    case Opcode.FSUB:       // float
+                        code[i] = Opcode.FADD;
+                        break;
+                    case Opcode.DSUB:       // double
+                        code[i] = Opcode.DADD;
+                        break;
+                    case Opcode.LSUB:       // long
+                        code[i] = Opcode.LADD;
+                        break;
+                }
+            }
+        }
+        functions.writeFile(pathToOutputFolder);
+        functions.defrost();
     }
 
     /**
