@@ -9,17 +9,26 @@ import org.junit.runner.notification.RunListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.List;
 
 public class TestExecutor {
 
-    public void executeTestFromADistance(String pathToTestClasses, String pathToImplementation) throws ClassNotFoundException, MalformedURLException {
+    /**
+     *
+     * @param pathToTestClasses the ABSOLUTE path to the test classes
+     * @param pathToImplementation the ABSOLUTE path to the implementation
+     * @param classesName the name of the classes you want to execute
+     * @throws ClassNotFoundException
+     * @throws MalformedURLException
+     */
+    public void executeTestFromADistance(String pathToTestClasses, String pathToImplementation, List<String> classesName) throws ClassNotFoundException, MalformedURLException {
         JUnitCore core = new JUnitCore();
 
         core.addListener(new RunListener() {
 
             @Override
             public void testRunStarted(Description description) throws Exception {
-                System.out.println("DEBUT DES TESTS");
+                //System.out.println("DEBUT DES TESTS");
             }
 
             @Override
@@ -57,9 +66,14 @@ public class TestExecutor {
         URL classUrl2 = new URL("file://" + pathToImplementation);
         URL[] classUrls = {classUrl, classUrl2};
         URLClassLoader ucl = new URLClassLoader(classUrls, getClass().getClassLoader());
-        Class c = ucl.loadClass("MathOperationTest");
+        Class c;
 
-        core.run(c);
+        for(String classToLoad : classesName){
+           c = ucl.loadClass(classToLoad);
+           core.run(c);
+        }
+
+
 
     }
 

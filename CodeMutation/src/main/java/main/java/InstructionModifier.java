@@ -21,7 +21,7 @@ public class InstructionModifier {
 
         final String inputFolder = "./SourceCode/target/classes/";
         final String outputFolder = "./SourceModifiedCode/target/classes/";
-        //Chose the folder where the sources are
+        //Choose the folder where the sources are
         pool.appendClassPath(inputFolder);
 
         // select the class to change
@@ -50,5 +50,27 @@ public class InstructionModifier {
             }
         }
         functions.writeFile(outputFolder);
+        //rewriter();
+    }
+
+    /**
+     * Rewrite the classes "ClassesNames" found in the "inputfolder" to the "outputfolder"
+     * @param inputFolder
+     * @param outputFolder
+     * @param classesNames
+     * @throws NotFoundException
+     * @throws CannotCompileException
+     * @throws IOException
+     */
+    public void rewriter(String inputFolder, String outputFolder, List<String> classesNames ) throws NotFoundException, CannotCompileException, IOException {
+        ClassPool pool = ClassPool.getDefault();
+        //Choose the folder where the sources are
+        pool.appendClassPath(inputFolder);
+
+        // select the class to change
+        for(String className : classesNames){
+            CtClass functions = pool.get(className);
+            functions.writeFile(outputFolder);
+        }
     }
 }
