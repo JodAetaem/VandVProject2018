@@ -1,54 +1,39 @@
 package main.java;
 
-import org.junit.runner.*;
+import org.junit.runner.Description;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
-import org.junit.runner.notification.RunNotifier;
-import org.junit.runner.notification.StoppedByUserException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.List;
 
 public class TestExecutor {
 
-    public void executeTestFromADistance() throws ClassNotFoundException, MalformedURLException {
-
-//        URL classUrl;
-//        classUrl = new URL("file:///home/istic-larzilliere/Documents/VV/Project2019/SourceCode/target/test-classes/");
-//        URL[] classUrls = { classUrl };
-//        URLClassLoader ucl = new URLClassLoader(classUrls);
-//        Class c = ucl.loadClass("MathOperationTest");
-//
-//        Class<?>[] classes = {c};
-//        Request request = Request.classes(new Computer(), classes);
-//        Runner runner = request.getRunner();
-//        Result result = new Result();
-//        RunNotifier notifier = new RunNotifier();
-//       // RequestStopListener listener = new RequestStopListener(notifier);
-//
-//
-//        try {
-//            runner.run(notifier);
-//        }
-//        catch(StoppedByUserException exc) {
-//            System.out.println("Process stopped");
-//        }
-//        System.out.println("Did all test passed? " + result.wasSuccessful());
-//        System.out.print("Tests executed: " + result.getRunCount());
-
+    /**
+     *
+     * @param pathToTestClasses the ABSOLUTE path to the test classes
+     * @param pathToImplementation the ABSOLUTE path to the implementation
+     * @param classesName the name of the classes you want to execute
+     * @throws ClassNotFoundException
+     * @throws MalformedURLException
+     */
+    public void executeTestFromADistance(String pathToTestClasses, String pathToImplementation, List<String> classesName) throws ClassNotFoundException, MalformedURLException {
         JUnitCore core = new JUnitCore();
 
-        core.addListener( new RunListener() {
+        core.addListener(new RunListener() {
 
             @Override
             public void testRunStarted(Description description) throws Exception {
-                System.out.println("RUN STARTED");
+                //System.out.println("DEBUT DES TESTS");
             }
 
             @Override
             public void testStarted(Description description) throws Exception {
-                System.out.println("TEST STARTED: " +  description.getDisplayName());
+                //System.out.println("TEST STARTED: " + description.getDisplayName());
             }
 
             @Override
@@ -58,12 +43,12 @@ public class TestExecutor {
 
             @Override
             public void testIgnored(Description description) throws Exception {
-                System.out.println("TEST IGNORED: " + description.getDisplayName());
+                //System.out.println("TEST IGNORED: " + description.getDisplayName());
             }
 
             @Override
             public void testFinished(Description description) throws Exception {
-                System.out.println("TEST FINISHED: " + description.getDisplayName());
+                //System.out.println("TEST FINISHED: " + description.getDisplayName());
             }
 
 
@@ -75,16 +60,20 @@ public class TestExecutor {
                 System.out.println(String.format("| RUN: %d", result.getRunCount()));
             }
 
-        } );
+        });
 
-        URL classUrl;
-        classUrl = new URL("file:///home/istic-larzilliere/Documents/VV/Project2019/SourceCode/target/test-classes/");
-        URL[] classUrls = { classUrl };
-        URLClassLoader ucl = new URLClassLoader(classUrls);
-        Class c = ucl.loadClass("MathOperationTest");
+        URL classUrl = new URL("file://" + pathToTestClasses);
+        URL classUrl2 = new URL("file://" + pathToImplementation);
+        URL[] classUrls = {classUrl, classUrl2};
+        URLClassLoader ucl = new URLClassLoader(classUrls, getClass().getClassLoader());
+        Class c;
+
+        for(String classToLoad : classesName){
+           c = ucl.loadClass(classToLoad);
+           core.run(c);
+        }
 
 
-        core.run(c.getClass());
 
     }
 

@@ -22,12 +22,20 @@ public class MathOperationTest {
 
     @Test
     public void shouldAddCorrectly(){
-        assertTrue(operation.add(1,2)==3);
+        assertTrue("function add is incorrect: "  + operation.add(1,2) + " was received when 3 was expected"
+                ,operation.add(1,2)==3);
     }
 
     @Test
     public void shouldSubCorrectly(){
-        assertTrue(operation.substract(2,1)==1);
+        assertTrue("function substract is incorrect: "  + operation.substract(2,1) + " was received when 1 was expected",
+                operation.substract(2,1)==1);
+    }
+
+    @Test
+    public void shouldAdd3TimesAndSub1Correctly(){
+        assertTrue("function Add 3x -1 is incorrect : " + operation.add3TimesAndSub1(2,1) + " was received when 4 was expected",
+                operation.add3TimesAndSub1(2,1)==4);
     }
 
 }
