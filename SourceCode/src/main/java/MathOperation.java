@@ -16,5 +16,7 @@ public class MathOperation {
         return result;
     }
 
+    public int add3TimesAndSub1(int first, int second) {return first + second + second + second - 1;}
+
 
 }

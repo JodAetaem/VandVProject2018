@@ -64,6 +64,11 @@ public class _MainRunner {
 
             System.out.println("\n//////////////////   Fin de l'execution du programme   //////////////////");
 
+            System.out.println("\nTEST A DELETE EN DESSOUS DE CE POINT\n");
+
+
+            System.out.println(IM.countOperationInClass("./" + defaultPathToModifiedImplemClasses,
+                    "MathOperation", "add3TimesAndSub1", "sub"));
 
 
 

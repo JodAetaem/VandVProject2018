@@ -32,4 +32,10 @@ public class MathOperationTest {
                 operation.substract(2,1)==1);
     }
 
+    @Test
+    public void shouldAdd3TimesAndSub1Correctly(){
+        assertTrue("function Add 3x -1 is incorrect : " + operation.add3TimesAndSub1(2,1) + " was received when 4 was expected",
+                operation.add3TimesAndSub1(2,1)==4);
+    }
+
 }
