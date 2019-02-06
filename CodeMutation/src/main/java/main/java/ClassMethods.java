@@ -20,7 +20,7 @@ public class ClassMethods {
         this.methods = methods;
     }
 
-    public void getMethodsFromClass(String pathname,String className) throws NotFoundException {
+    public List<String> getMethodsFromClass(String pathname,String className) throws NotFoundException {
 
         methods.clear();
         ClassPool pool = ClassPool.getDefault();
@@ -31,6 +31,8 @@ public class ClassMethods {
         for(CtMethod method : functions.getDeclaredMethods()) {
             this.methods.add(method.getName());
         }
+
+        return methods;
 
     }
 }

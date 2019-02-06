@@ -1,11 +1,11 @@
 package main.java;
 
-import javassist.*;
+import javassist.CannotCompileException;
+import javassist.NotFoundException;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class _MainRunner {
 
@@ -19,6 +19,7 @@ public class _MainRunner {
         String defaultPathToModifiedImplemClasses = "SourceModifiedCode/target/classes/";
 
         InstructionModifier IM = new InstructionModifier();
+        ClassMethods CM = new ClassMethods();
         try {
 
             // Modification de la class source
@@ -29,46 +30,51 @@ public class _MainRunner {
 
             // Execution des tests
             System.out.println("TESTS AVANT LES MODIFICATIONS");
-            List<String> testsClasses = new ArrayList<String>();
+            List<String> testsClasses = new ArrayList<String>();        // TODO recuperer toutes les noms de classes
             testsClasses.add("MathOperationTest");
+
+            List<String> implemClasses = new ArrayList<>();         // TODO recuperer le nom des classes d'implem
+            implemClasses.add("MathOperation");
+
+
             TestExecutor te = new TestExecutor();
             te.executeTestFromADistance(ABSOLUTE_PATH_TO_PROJECT + defaultPathToTestClasses,
                     ABSOLUTE_PATH_TO_PROJECT + defaultPathToImplemClasses, testsClasses);
 
-            //Modification de classes
-            System.out.println("\nModifications des + en -");
-            IM.addToSub("./"+defaultPathToImplemClasses,"./"+defaultPathToModifiedImplemClasses,AllFunctionsToModify);
 
-            //Réécritures des tests
-            IM.rewriter("./" + defaultPathToTestClasses,
-                    "./" + defaultPathToModifiedTestClasses,
-                    testsClasses);
+            System.out.println("\nDebut des modification de la classe MathOperation");
+            List<String> methodList = CM.getMethodsFromClass(ABSOLUTE_PATH_TO_PROJECT + defaultPathToImplemClasses,
+                    "MathOperation");
+            int nbOperation = 0;
+            int torollback = -1;
+            for(String methodName : methodList){
+                System.out.println("Modification de la methode " + methodName);
+                nbOperation = IM.countOperationInClass("./" + defaultPathToModifiedImplemClasses,
+                        "MathOperation", methodName, "add");
 
-            System.out.println("TESTS APRES LES MODIFICATIONS");
-            te.executeTestFromADistance(ABSOLUTE_PATH_TO_PROJECT + defaultPathToModifiedTestClasses,
-                    ABSOLUTE_PATH_TO_PROJECT + defaultPathToModifiedImplemClasses, testsClasses);
+                for(int operationToChange = 0; operationToChange < nbOperation; operationToChange++){
+                    System.out.println("Modification de variable position " + operationToChange);
+                    torollback = IM.addToSubPreciseOperation(
+                            ABSOLUTE_PATH_TO_PROJECT + defaultPathToImplemClasses,
+                            ABSOLUTE_PATH_TO_PROJECT + defaultPathToModifiedImplemClasses,
+                            "MathOperation", methodName, operationToChange);
 
+                    te.executeTestFromADistance(ABSOLUTE_PATH_TO_PROJECT + defaultPathToModifiedTestClasses,
+                            ABSOLUTE_PATH_TO_PROJECT + defaultPathToModifiedImplemClasses, testsClasses);
 
-            //Modification de classes
-            System.out.println("\nModifications des - en +");
-            IM.subToAdd("./"+ defaultPathToImplemClasses,"./"+defaultPathToModifiedImplemClasses,AllFunctionsToModify);
+                    // Rollback the modification so it doesn't influence the next modification
+                    if(torollback!=-1){
+                        IM.inverseOperatorAtPosition(
+                                ABSOLUTE_PATH_TO_PROJECT + defaultPathToImplemClasses,
+                                ABSOLUTE_PATH_TO_PROJECT + defaultPathToModifiedImplemClasses,
+                                "MathOperation", methodName, torollback);
+                    }
+                }
+                System.out.println("Fin de la modification de "  + methodName);
+            }
 
-            //Réécritures des tests
-            IM.rewriter("./" + defaultPathToTestClasses,
-                    "./" + defaultPathToModifiedTestClasses,
-                    testsClasses);
-
-            System.out.println("TESTS APRES LES MODIFICATIONS");
-            te.executeTestFromADistance(ABSOLUTE_PATH_TO_PROJECT + defaultPathToModifiedTestClasses,
-                    ABSOLUTE_PATH_TO_PROJECT + defaultPathToModifiedImplemClasses, testsClasses);
 
             System.out.println("\n//////////////////   Fin de l'execution du programme   //////////////////");
-
-            System.out.println("\nTEST A DELETE EN DESSOUS DE CE POINT\n");
-
-
-            System.out.println(IM.countOperationInClass("./" + defaultPathToModifiedImplemClasses,
-                    "MathOperation", "add3TimesAndSub1", "sub"));
 
 
 
