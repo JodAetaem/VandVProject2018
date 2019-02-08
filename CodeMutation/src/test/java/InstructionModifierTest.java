@@ -1,5 +1,6 @@
 import javassist.NotFoundException;
 import main.java.InstructionModifier;
+import main.java.constantes.DefaultConst;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,15 +9,8 @@ import static org.junit.Assert.assertTrue;
 
 public class InstructionModifierTest {
 
-    String ABSOLUTE_PATH_TO_PROJECT = "/home/istic-larzilliere/Documents/VV/Project2019/";
-
-    String defaultPathToTestClasses = "SourceCode/target/test-classes/";
-    String defaultPathToImplemClasses = "SourceCode/target/classes/";
-
-    String defaultPathToModifiedTestClasses = "SourceModifiedCode/target/test-classes/";
-    String defaultPathToModifiedImplemClasses = "SourceModifiedCode/target/classes/";
-
     public InstructionModifier IM = new InstructionModifier();
+    public DefaultConst DC = new DefaultConst();
 
     @Before
     public void init(){
@@ -29,12 +23,12 @@ public class InstructionModifierTest {
 
     @Test
     public void countOperationTest() throws NotFoundException {
-        assertTrue(IM.countOperationInClass(ABSOLUTE_PATH_TO_PROJECT + defaultPathToModifiedImplemClasses,
+        assertTrue(IM.countOperationInClass(DC.ABSOLUTE_PATH_TO_PROJECT + DC.defaultPathToModifiedImplemClasses,
                 "MathOperation", "add3TimesAndSub1", "sub") ==1);
-        assertTrue(IM.countOperationInClass(ABSOLUTE_PATH_TO_PROJECT + defaultPathToModifiedImplemClasses,
+        assertTrue(IM.countOperationInClass(DC.ABSOLUTE_PATH_TO_PROJECT + DC.defaultPathToModifiedImplemClasses,
                 "MathOperation", "add3TimesAndSub1", "add")==3);
 
-        assertTrue(IM.countOperationInClass(ABSOLUTE_PATH_TO_PROJECT + defaultPathToModifiedImplemClasses,
+        assertTrue(IM.countOperationInClass(DC.ABSOLUTE_PATH_TO_PROJECT + DC.defaultPathToModifiedImplemClasses,
                 "MathOperation", "add3TimesAndSub1", "mul")==0);
     }
 }
