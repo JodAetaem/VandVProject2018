@@ -1,5 +1,6 @@
 package main.java;
 
+import com.sun.org.apache.bcel.internal.generic.IDIV;
 import javassist.*;
 import javassist.bytecode.CodeAttribute;
 import javassist.bytecode.Opcode;
@@ -11,7 +12,7 @@ import java.util.List;
 public class InstructionModifier {
 
     /**
-     * Handle the change from add to sub
+     * DEPRECATED : Handle all changes from add to sub
      *
      * @param pathToSourceClasses Chemin vers la classe a modifier
      * @param pathToOutputFolder  Chemin ou sera écrit la modification (finir par /target/classes/)
@@ -58,7 +59,7 @@ public class InstructionModifier {
     }
 
     /**
-     * Handle the change from sub to add
+     * DEPRECATED : Handle every changes from sub to add
      *
      * @param pathToSourceClasses Chemin vers la classe a modifier
      * @param pathToOutputFolder  Chemin ou sera écrit la modification (finir par /target/classes/)
@@ -102,16 +103,16 @@ public class InstructionModifier {
     }
 
     /**
-     * Change add to sub
-     *
+     * Change add to sub, depending on the position of the operator in the function
+     * (first + , second + , third + .... )
      * @param pathToSourceClasses   chemin des classes sources
      * @param pathToOutputFolder    chemin de sortie
      * @param className             nom de la classe
      * @param functionName          nom de la fonction
      * @param operationNumberWanted la position de l'opération a changer
-     * @throws NotFoundException      e
-     * @throws CannotCompileException e
-     * @throws IOException            e
+     * @throws NotFoundException      class not found
+     * @throws CannotCompileException the modification make the class unable to be compiled
+     * @throws IOException            other exception
      */
     public int addToSubPreciseOperation(String pathToSourceClasses, String pathToOutputFolder, String className, String functionName, int operationNumberWanted) throws NotFoundException, CannotCompileException, IOException {
 
@@ -177,6 +178,18 @@ public class InstructionModifier {
     }
 
 
+    /**
+     *
+     * @param pathToSourceClasses relative path to the implementation
+     * @param pathToOutputFolder path where the new class will be written
+     * @param className     name of the class to modify
+     * @param functionName  name of the function to modify
+     * @param operationNumberWanted the number of the operation to change (first / second ecc ...)
+     * @return the position of the modified operation
+     * @throws NotFoundException class not found
+     * @throws CannotCompileException an error during the modification happen
+     * @throws IOException other exception
+     */
     public int subToAddPreciseOperation(String pathToSourceClasses, String pathToOutputFolder, String className, String functionName, int operationNumberWanted) throws NotFoundException, CannotCompileException, IOException {
 
         ClassPool pool = ClassPool.getDefault();
@@ -233,13 +246,168 @@ public class InstructionModifier {
                         currentPosition++;
                     }
                     break;
-                //default: System.out.println("Pas de le char voulu");
             }
         }
         functions.writeFile(pathToOutputFolder);
         functions.defrost();
         return positionModified;
     }
+
+
+    /**
+     * Modifiying multiply with divided at the numbered position in the function
+     * @param pathToSourceClasses relative path to the implementation
+     * @param pathToOutputFolder path where the new class will be written
+     * @param className     name of the class to modify
+     * @param functionName  name of the function to modify
+     * @param operationNumberWanted the number of the operation to change (first / second ecc ...)
+     * @return the position of the modified operation
+     * @throws NotFoundException class not found
+     * @throws CannotCompileException an error during the modification happen
+     * @throws IOException other exception
+     */
+    public int mulToDivPreciseOperation(String pathToSourceClasses, String pathToOutputFolder, String className, String functionName, int operationNumberWanted) throws NotFoundException, CannotCompileException, IOException {
+
+        ClassPool pool = ClassPool.getDefault();
+        //Choose the folder where the sources are
+        pool.appendClassPath(pathToSourceClasses);
+
+        // select the class to change
+        CtClass functions = pool.get(className);
+
+        //select the function to change
+        CtMethod twice = functions.getDeclaredMethod(functionName);
+        int currentPosition = 0;
+        CodeAttribute codeAttribute = twice.getMethodInfo().getCodeAttribute();
+        byte[] code = codeAttribute.getCode();
+
+        int positionModified = -1;
+
+        for (int i = 0; i < code.length; i++) {
+            switch (code[i]) {
+                case Opcode.IMUL:       //int
+                    if (currentPosition == operationNumberWanted) {
+                        code[i] = Opcode.IDIV;
+                        currentPosition++;
+                        positionModified = i;
+                    } else {
+                        currentPosition++;
+                        System.out.println("char trouvé mais pas la position voulu");
+                    }
+                    break;
+                case Opcode.FMUL:       // float
+                    if (currentPosition == operationNumberWanted) {
+                        code[i] = Opcode.FDIV;
+                        currentPosition++;
+                        positionModified = i;
+                    } else {
+                        currentPosition++;
+                    }
+                    break;
+                case Opcode.DMUL:       // double
+                    if (currentPosition == operationNumberWanted) {
+                        code[i] = Opcode.DDIV;
+                        currentPosition++;
+                        positionModified = i;
+                    } else {
+                        currentPosition++;
+                    }
+                    break;
+                case Opcode.LMUL:       // long
+                    if (currentPosition == operationNumberWanted) {
+                        code[i] = Opcode.LDIV;
+                        currentPosition++;
+                        positionModified = i;
+                    } else {
+                        currentPosition++;
+                    }
+                    break;
+            }
+        }
+        functions.writeFile(pathToOutputFolder);
+        functions.defrost();
+        return positionModified;
+    }
+
+
+
+    /**
+     * Modifiying divided with multiply at the numbered position in the function
+     * @param pathToSourceClasses relative path to the implementation
+     * @param pathToOutputFolder path where the new class will be written
+     * @param className     name of the class to modify
+     * @param functionName  name of the function to modify
+     * @param operationNumberWanted the number of the operation to change (first / second ecc ...)
+     * @return the position of the modified operation
+     * @throws NotFoundException class not found
+     * @throws CannotCompileException an error during the modification happen
+     * @throws IOException other exception
+     */
+    public int divToMulPreciseOperation(String pathToSourceClasses, String pathToOutputFolder, String className, String functionName, int operationNumberWanted) throws NotFoundException, CannotCompileException, IOException {
+
+        ClassPool pool = ClassPool.getDefault();
+        //Choose the folder where the sources are
+        pool.appendClassPath(pathToSourceClasses);
+
+        // select the class to change
+        CtClass functions = pool.get(className);
+
+        //select the function to change
+        CtMethod twice = functions.getDeclaredMethod(functionName);
+        int currentPosition = 0;
+        CodeAttribute codeAttribute = twice.getMethodInfo().getCodeAttribute();
+        byte[] code = codeAttribute.getCode();
+
+        int positionModified = -1;
+
+        for (int i = 0; i < code.length; i++) {
+            switch (code[i]) {
+                case Opcode.IDIV:       //int
+                    if (currentPosition == operationNumberWanted) {
+                        code[i] = Opcode.IMUL;
+                        currentPosition++;
+                        positionModified = i;
+                    } else {
+                        currentPosition++;
+                        System.out.println("char trouvé mais pas la position voulu");
+                    }
+                    break;
+                case Opcode.FDIV:       // float
+                    if (currentPosition == operationNumberWanted) {
+                        code[i] = Opcode.FMUL;
+                        currentPosition++;
+                        positionModified = i;
+                    } else {
+                        currentPosition++;
+                    }
+                    break;
+                case Opcode.DDIV:       // double
+                    if (currentPosition == operationNumberWanted) {
+                        code[i] = Opcode.DMUL;
+                        currentPosition++;
+                        positionModified = i;
+                    } else {
+                        currentPosition++;
+                    }
+                    break;
+                case Opcode.LDIV:       // long
+                    if (currentPosition == operationNumberWanted) {
+                        code[i] = Opcode.LMUL;
+                        currentPosition++;
+                        positionModified = i;
+                    } else {
+                        currentPosition++;
+                    }
+                    break;
+            }
+        }
+        functions.writeFile(pathToOutputFolder);
+        functions.defrost();
+        return positionModified;
+    }
+
+
+
 
 
     /**
@@ -364,15 +532,15 @@ public class InstructionModifier {
                             break;
                     }
                 }
-            default:
-                System.out.println("Aucune opération " + operation + " dans la fonction " + functionName +
-                        "de la classe " + className);
-                return 0;
         }
         functions.defrost();
         return nbOperation;
     }
 
+    /**
+     * Delete the file at the path given
+     * @param pathToFile path to the file to delete
+     */
     public void fileDeleter(String pathToFile) {
         File toDelete = new File(pathToFile);
         if (toDelete.delete()) {
