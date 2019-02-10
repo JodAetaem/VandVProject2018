@@ -20,6 +20,7 @@ public class _MainRunner {
         mutationAnalysisSubToAdd();
         mutationAnalysisMulToDiv();
         mutationAnalysisDivToMul();
+        mutationAnalysisInfSup();
 
     }
 
@@ -382,7 +383,7 @@ public class _MainRunner {
 
         DefaultConst constantes = new DefaultConst();
 
-        InstructionModifier IM = new InstructionModifier();
+        SupInfModifier IM = new SupInfModifier();
         ClassMethods CM = new ClassMethods();
         try {
 
@@ -414,12 +415,12 @@ public class _MainRunner {
             int torollback = -1;
             for(String methodName : methodList){
                 System.out.println("Modification de la methode " + methodName);
-                nbOperation = IM.countOperationInClass(constantes.ABSOLUTE_PATH_TO_PROJECT + constantes.defaultPathToModifiedImplemClasses,
-                        "MathSupInf", methodName, "sub");
+                nbOperation = IM.countSuppInfInClass(constantes.ABSOLUTE_PATH_TO_PROJECT + constantes.defaultPathToModifiedImplemClasses,
+                        "MathSupInf", methodName, "inf");
 
                 for(int operationToChange = 0; operationToChange < nbOperation; operationToChange++){
                     System.out.println("Modification de variable position " + operationToChange);
-                    torollback = IM.subToAddPreciseOperation(
+                    torollback = IM.SupPreciseOperation(
                             constantes.ABSOLUTE_PATH_TO_PROJECT + constantes.defaultPathToImplemClasses,
                             constantes.ABSOLUTE_PATH_TO_PROJECT + constantes.defaultPathToModifiedImplemClasses,
                             "MathSupInf", methodName, operationToChange);
@@ -429,7 +430,7 @@ public class _MainRunner {
 
                     // Rollback the modification so it doesn't influence the next modification
                     if(torollback!=-1){
-                        IM.inverseOperatorAtPosition(
+                        IM.inverseSupInfAtPosition(
                                 constantes.ABSOLUTE_PATH_TO_PROJECT + constantes.defaultPathToImplemClasses,
                                 constantes.ABSOLUTE_PATH_TO_PROJECT + constantes.defaultPathToModifiedImplemClasses,
                                 "MathSupInf", methodName, torollback);
