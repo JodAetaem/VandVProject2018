@@ -39,7 +39,7 @@ public class SupInfModifier {
 
         for (int i = 0; i < code.length; i++) {
             switch (code[i]) {
-                case -93:       //int
+                case -93:       //inferior or equal
                     if (currentPosition == operationNumberWanted) {
                         code[i] = -94;
                         currentPosition++;
@@ -48,7 +48,7 @@ public class SupInfModifier {
                         currentPosition++;
                     }
                     break;
-                case -94:       // float
+                case -94:       // inferior
                     if (currentPosition == operationNumberWanted) {
                         code[i] = -93;
                         currentPosition++;
@@ -57,7 +57,7 @@ public class SupInfModifier {
                         currentPosition++;
                     }
                     break;
-                case -95:       // double
+                case -95:       // superior or equal
                     if (currentPosition == operationNumberWanted) {
                         code[i] = -96;
                         currentPosition++;
@@ -66,7 +66,7 @@ public class SupInfModifier {
                         currentPosition++;
                     }
                     break;
-                case -96:       // long
+                case -96:       // superior
                     if (currentPosition == operationNumberWanted) {
                         code[i] = -95;
                         currentPosition++;
@@ -83,5 +83,101 @@ public class SupInfModifier {
         pool.clearImportedPackages();
         functions.defrost();
         return positionModified;
+    }
+
+    //todo: refaire dans  instruction modifier: inverse operaterAtPosition et countOperationInClass
+    //et ajouter un mutationAnalysis suoinf
+
+    public int countSuppInfInClass(String pathToSourceClasses, String className, String functionName, String operation) throws NotFoundException {
+        int nbOperation = 0;
+
+
+        ClassPool pool = ClassPool.getDefault();
+        //Choose the folder where the sources are
+        pool.appendClassPath(pathToSourceClasses);
+
+        // select the class to change
+        CtClass functions = pool.get(className);
+        //select the function to change
+        CtMethod twice = functions.getDeclaredMethod(functionName);
+
+        CodeAttribute codeAttribute = twice.getMethodInfo().getCodeAttribute();
+        byte[] code = codeAttribute.getCode();
+
+        switch (operation) {
+            case "inforeq":
+                for (int i = 0; i < code.length; i++) {
+                    switch (code[i]) {
+                        case -93:       //inferior or equal
+                            nbOperation++;
+                            break;
+                    }
+                }
+                break;
+            case "inf":
+                for (int i = 0; i < code.length; i++) {
+                    switch (code[i]) {
+                        case -94:       //inf
+                            nbOperation++;
+                            break;
+
+                    }
+                }
+                break;
+            case "suporeq":
+                for (int i = 0; i < code.length; i++) {
+                    switch (code[i]) {
+                        case -95:       //suporeq
+                            nbOperation++;
+                            break;
+
+                    }
+                }
+                break;
+            case "sup":
+                for (int i = 0; i < code.length; i++) {
+                    switch (code[i]) {
+                        case -96:       //sup
+                            nbOperation++;
+                            break;
+                    }
+                }
+        }
+        functions.defrost();
+        return nbOperation;
+    }
+
+    public void inverseSupInfAtPosition(String pathToSourceClasses, String pathToOutputFolder, String className, String functionName, int operationToModify) throws NotFoundException, CannotCompileException, IOException {
+
+        ClassPool pool = ClassPool.getDefault();
+        //Choose the folder where the sources are
+        pool.appendClassPath(pathToSourceClasses);
+
+        // select the class to change
+        CtClass functions = pool.get(className);
+
+        //select the function to change
+        CtMethod twice = functions.getDeclaredMethod(functionName);
+        int currentPosition = 0;
+        CodeAttribute codeAttribute = twice.getMethodInfo().getCodeAttribute();
+        byte[] code = codeAttribute.getCode();
+
+        switch (code[operationToModify]) {
+            case -93:       //InfOrEq
+                code[operationToModify] = -94;
+                break;
+            case -94:       // Inf
+                code[operationToModify] = -93;
+                break;
+            case -95:       // SupOrEq
+                code[operationToModify] = -96;
+                break;
+            case -96:       // Sup
+                code[operationToModify] = -95;
+                break;
+
+        }
+        functions.writeFile(pathToOutputFolder);
+        functions.defrost();
     }
 }
