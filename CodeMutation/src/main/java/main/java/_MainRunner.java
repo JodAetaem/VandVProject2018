@@ -28,6 +28,7 @@ public class _MainRunner {
         DefaultConst constantes = new DefaultConst();
         List<String> testsClassesName = new ArrayList<String>();
         testsClassesName.add("MathOperationTest");
+        testsClassesName.add("MathSupInfTest");
         try {
             new InstructionModifier().rewriter(constantes.ABSOLUTE_PATH_TO_PROJECT + constantes.defaultPathToTestClasses,
                     constantes.ABSOLUTE_PATH_TO_PROJECT + constantes.defaultPathToModifiedTestClasses,
@@ -400,7 +401,7 @@ public class _MainRunner {
             testsClasses.add("MathSupInfTest");
 
             List<String> implemClasses = new ArrayList<>();         // TODO recuperer le nom des classes d'implem
-            implemClasses.add("MathSupInfTest");
+            implemClasses.add("MathSupInf");
 
 
             TestExecutor te = new TestExecutor();

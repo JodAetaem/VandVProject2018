@@ -27,19 +27,19 @@ public class MathSupInfTest {
     @Test
     public void shouldCompareIfStrictlySuperiorCorrectly(){
         assertTrue("function strictlySupp is incorrect: "  + supInf.strictlySupp(1,1) + " was received when false was expected"
-                ,supInf.strictlyInf(1,1)==false);
+                ,supInf.strictlySupp(1,1)==false);
     }
 
     @Test
     public void shouldCompareIfEqualOrSuperiorCorrectly(){
         assertTrue("function supOrEq is incorrect: "  + supInf.supOrEq(1,1) + " was received when true was expected"
-                ,supInf.strictlyInf(1,1)==true);
+                ,supInf.supOrEq(1,1)==true);
     }
 
     @Test
     public void shouldCompareIfEqualOrInferiorCorrectly(){
         assertTrue("function infOrEq is incorrect: "  + supInf.infOrEq(1,1) + " was received when true was expected"
-                ,supInf.strictlyInf(1,1)==true);
+                ,supInf.infOrEq(1,1)==true);
     }
 }
 
