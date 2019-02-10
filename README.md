@@ -7,7 +7,7 @@ Binome : Quentin A. et Charles L.
 Sujet : Mutation analysis ( https://github.com/software-testing/Projects-2018-2019)
 
 
-##How to install
+## How to install
 
 * Go to the repo (https://github.com/JodAetaem/VandVProject2018) and clone the project
 * In your IDE, got to CodeMutation/src/main/java/constantes/Constantes.class and modify it with your classpath
