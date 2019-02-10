@@ -10,11 +10,11 @@ public class MathSupInf {
         return first < second;
     }
 
-    public boolean infOrEq(int first, int second) {
+    public boolean infOrEq(long first, long second) {
         return (first <= second);
     }
 
-    public boolean supOrEq(int first, int second) {
+    public boolean supOrEq(float first, float second) {
         return (first >= second);
     }
 

@@ -20,7 +20,8 @@ public class _MainRunner {
         mutationAnalysisSubToAdd();
         mutationAnalysisMulToDiv();
         mutationAnalysisDivToMul();
-        mutationAnalysisInfSup();
+        mutationAnalysisInfSupInt();
+        mutationAnalysisInfSupOther();
 
     }
 
@@ -380,7 +381,7 @@ public class _MainRunner {
 
     }
 
-    public static void mutationAnalysisInfSup(){
+    public static void mutationAnalysisInfSupInt(){
 
         DefaultConst constantes = new DefaultConst();
 
@@ -396,7 +397,7 @@ public class _MainRunner {
             AllFunctionsToModify.add("supOrEq");
 
             // Execution des tests
-            System.out.println("TESTS AVANT LES MODIFICATIONS - InfSupp");
+            System.out.println("TESTS AVANT LES MODIFICATIONS - InfSuppInt");
             List<String> testsClasses = new ArrayList<String>();        // TODO recuperer toutes les noms de classes
             testsClasses.add("MathSupInfTest");
 
@@ -416,12 +417,93 @@ public class _MainRunner {
             int torollback = -1;
             for(String methodName : methodList){
                 System.out.println("Modification de la methode " + methodName);
-                nbOperation = IM.countSuppInfInClass(constantes.ABSOLUTE_PATH_TO_PROJECT + constantes.defaultPathToModifiedImplemClasses,
-                        "MathSupInf", methodName, "inf");
+                nbOperation = IM.countSupInfInClass(constantes.ABSOLUTE_PATH_TO_PROJECT + constantes.defaultPathToModifiedImplemClasses,
+                        "MathSupInf", methodName, "int");
 
                 for(int operationToChange = 0; operationToChange < nbOperation; operationToChange++){
                     System.out.println("Modification de variable position " + operationToChange);
-                    torollback = IM.SupPreciseOperation(
+                    torollback = IM.SupInfIntPreciseOperation(
+                            constantes.ABSOLUTE_PATH_TO_PROJECT + constantes.defaultPathToImplemClasses,
+                            constantes.ABSOLUTE_PATH_TO_PROJECT + constantes.defaultPathToModifiedImplemClasses,
+                            "MathSupInf", methodName, operationToChange);
+
+                    te.executeTestFromADistance(constantes.ABSOLUTE_PATH_TO_PROJECT + constantes.defaultPathToModifiedTestClasses,
+                            constantes.ABSOLUTE_PATH_TO_PROJECT + constantes.defaultPathToModifiedImplemClasses, testsClasses);
+
+                    // Rollback the modification so it doesn't influence the next modification
+                    if(torollback!=-1){
+                        IM.inverseSupInfAtPosition(
+                                constantes.ABSOLUTE_PATH_TO_PROJECT + constantes.defaultPathToImplemClasses,
+                                constantes.ABSOLUTE_PATH_TO_PROJECT + constantes.defaultPathToModifiedImplemClasses,
+                                "MathSupInf", methodName, torollback);
+                    }
+                }
+                System.out.println("Fin de la modification de "  + methodName);
+            }
+
+
+            System.out.println("\n//////////////////   Fin de l'execution du programme   //////////////////\n");
+
+
+
+        } catch (NotFoundException e) {
+            System.out.println("Imposible de trouver le fichier source: " + e.getMessage());
+            e.printStackTrace();
+        } catch (CannotCompileException e) {
+            System.out.println("Erreur lors de la compilation: " + e.getMessage());
+            e.printStackTrace();
+        } catch (IOException e) {
+            System.out.println("Exception: " + e.getMessage());
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            System.out.println("Erreur lors du chargement de la classe de test: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+
+    }
+    public static void mutationAnalysisInfSupOther(){
+
+        DefaultConst constantes = new DefaultConst();
+
+        SupInfModifier IM = new SupInfModifier();
+        ClassMethods CM = new ClassMethods();
+        try {
+
+            // Modification de la class source
+            List<String> AllFunctionsToModify = new ArrayList<String>();
+            AllFunctionsToModify.add("strictlySupp");
+            AllFunctionsToModify.add("strictlyInf");
+            AllFunctionsToModify.add("infOrEq");
+            AllFunctionsToModify.add("supOrEq");
+
+            // Execution des tests
+            System.out.println("TESTS AVANT LES MODIFICATIONS - InfSuppOther");
+            List<String> testsClasses = new ArrayList<String>();        // TODO recuperer toutes les noms de classes
+            testsClasses.add("MathSupInfTest");
+
+            List<String> implemClasses = new ArrayList<>();         // TODO recuperer le nom des classes d'implem
+            implemClasses.add("MathSupInf");
+
+
+            TestExecutor te = new TestExecutor();
+            te.executeTestFromADistance(constantes.ABSOLUTE_PATH_TO_PROJECT + constantes.defaultPathToTestClasses,
+                    constantes.ABSOLUTE_PATH_TO_PROJECT + constantes.defaultPathToImplemClasses, testsClasses);
+
+
+            System.out.println("\nDebut des modification de la classe MathSupInf");
+            List<String> methodList = CM.getMethodsFromClass(constantes.ABSOLUTE_PATH_TO_PROJECT + constantes.defaultPathToImplemClasses,
+                    "MathSupInf");
+            int nbOperation = 0;
+            int torollback = -1;
+            for(String methodName : methodList){
+                System.out.println("Modification de la methode " + methodName);
+                nbOperation = IM.countSupInfInClass(constantes.ABSOLUTE_PATH_TO_PROJECT + constantes.defaultPathToModifiedImplemClasses,
+                        "MathSupInf", methodName, "other");
+
+                for(int operationToChange = 0; operationToChange < nbOperation; operationToChange++){
+                    System.out.println("Modification de variable position " + operationToChange);
+                    torollback = IM.SupInfOtherPreciseOperation(
                             constantes.ABSOLUTE_PATH_TO_PROJECT + constantes.defaultPathToImplemClasses,
                             constantes.ABSOLUTE_PATH_TO_PROJECT + constantes.defaultPathToModifiedImplemClasses,
                             "MathSupInf", methodName, operationToChange);

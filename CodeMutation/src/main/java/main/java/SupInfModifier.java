@@ -10,7 +10,7 @@ import java.util.List;
 public class SupInfModifier {
 
     /**
-     * Change add to sub
+     * Change all the supp/inf of a method
      *
      * @param pathToSourceClasses   chemin des classes sources
      * @param pathToOutputFolder    chemin de sortie
@@ -21,7 +21,7 @@ public class SupInfModifier {
      * @throws CannotCompileException e
      * @throws IOException            e
      */
-    public int SupPreciseOperation(String pathToSourceClasses, String pathToOutputFolder, String className, String functionName, int operationNumberWanted) throws NotFoundException, CannotCompileException, IOException {
+    public int SupInfIntPreciseOperation(String pathToSourceClasses, String pathToOutputFolder, String className, String functionName, int operationNumberWanted) throws NotFoundException, CannotCompileException, IOException {
 
         ClassPool pool = ClassPool.getDefault();
         //Choose the folder where the sources are
@@ -59,14 +59,14 @@ public class SupInfModifier {
                     break;
                 case -95:       // superior or equal
                     if (currentPosition == operationNumberWanted) {
-                        code[i] = -96;
+                        code[i] = -92;
                         currentPosition++;
                         positionModified = i;
                     } else {
                         currentPosition++;
                     }
                     break;
-                case -96:       // superior
+                case -92:       // superior
                     if (currentPosition == operationNumberWanted) {
                         code[i] = -95;
                         currentPosition++;
@@ -80,7 +80,69 @@ public class SupInfModifier {
 
 
         functions.writeFile(pathToOutputFolder);
-        pool.clearImportedPackages();
+        functions.defrost();
+        return positionModified;
+    }
+
+    public int SupInfOtherPreciseOperation(String pathToSourceClasses, String pathToOutputFolder, String className, String functionName, int operationNumberWanted) throws NotFoundException, CannotCompileException, IOException {
+
+        ClassPool pool = ClassPool.getDefault();
+        //Choose the folder where the sources are
+        pool.appendClassPath(pathToSourceClasses);
+
+        // select the class to change
+        CtClass functions = pool.get(className);
+
+        //select the function to change
+        CtMethod twice = functions.getDeclaredMethod(functionName);
+        int currentPosition = 0;
+        CodeAttribute codeAttribute = twice.getMethodInfo().getCodeAttribute();
+        byte[] code = codeAttribute.getCode();
+        int positionModified = -1;
+
+        for (int i = 0; i < code.length; i++) {
+            switch (code[i]) {
+                case -99:       //inferior or equal
+                    if (currentPosition == operationNumberWanted) {
+                        code[i] = -100;
+                        currentPosition++;
+                        positionModified = i;
+                    } else {
+                        currentPosition++;
+                    }
+                    break;
+                case -100:       // inferior
+                    if (currentPosition == operationNumberWanted) {
+                        code[i] = -99;
+                        currentPosition++;
+                        positionModified = i;
+                    } else {
+                        currentPosition++;
+                    }
+                    break;
+                case -101:       // superior or equal
+                    if (currentPosition == operationNumberWanted) {
+                        code[i] = -98;
+                        currentPosition++;
+                        positionModified = i;
+                    } else {
+                        currentPosition++;
+                    }
+                    break;
+                case -98:       // superior
+                    if (currentPosition == operationNumberWanted) {
+                        code[i] = -101;
+                        currentPosition++;
+                        positionModified = i;
+                    } else {
+                        currentPosition++;
+                    }
+                    break;
+            }
+        }
+
+
+        functions.writeFile(pathToOutputFolder);
         functions.defrost();
         return positionModified;
     }
@@ -88,7 +150,7 @@ public class SupInfModifier {
     //todo: refaire dans  instruction modifier: inverse operaterAtPosition et countOperationInClass
     //et ajouter un mutationAnalysis suoinf
 
-    public int countSuppInfInClass(String pathToSourceClasses, String className, String functionName, String operation) throws NotFoundException {
+    public int countSupInfInClass(String pathToSourceClasses, String className, String functionName, String operation) throws NotFoundException {
         int nbOperation = 0;
 
 
@@ -105,43 +167,44 @@ public class SupInfModifier {
         byte[] code = codeAttribute.getCode();
 
         switch (operation) {
-            case "inforeq":
+            case "int":
                 for (int i = 0; i < code.length; i++) {
                     switch (code[i]) {
                         case -93:       //inferior or equal
                             nbOperation++;
                             break;
-                    }
-                }
-                break;
-            case "inf":
-                for (int i = 0; i < code.length; i++) {
-                    switch (code[i]) {
                         case -94:       //inf
                             nbOperation++;
                             break;
-
-                    }
-                }
-                break;
-            case "suporeq":
-                for (int i = 0; i < code.length; i++) {
-                    switch (code[i]) {
                         case -95:       //suporeq
                             nbOperation++;
                             break;
-
-                    }
-                }
-                break;
-            case "sup":
-                for (int i = 0; i < code.length; i++) {
-                    switch (code[i]) {
-                        case -96:       //sup
+                        case -92:       //sup
                             nbOperation++;
                             break;
                     }
                 }
+                break;
+            case "other":
+                for (int i = 0; i < code.length; i++) {
+                    switch (code[i]) {
+                        case -99:       //inferior or equal
+                            nbOperation++;
+                            break;
+                        case -100:       //inf
+                            nbOperation++;
+                            break;
+                        case -101:       //suporeq
+                            nbOperation++;
+                            break;
+                        case -98:       //sup
+                            nbOperation++;
+                            break;
+
+                    }
+                }
+                break;
+
         }
         functions.defrost();
         return nbOperation;
@@ -170,10 +233,22 @@ public class SupInfModifier {
                 code[operationToModify] = -93;
                 break;
             case -95:       // SupOrEq
-                code[operationToModify] = -96;
+                code[operationToModify] = -92;
                 break;
-            case -96:       // Sup
+            case -92:       // Sup
                 code[operationToModify] = -95;
+                break;
+            case -99:       //InfOrEq
+                code[operationToModify] = -100;
+                break;
+            case -100:       // Inf
+                code[operationToModify] = -99;
+                break;
+            case -101:       // SupOrEq
+                code[operationToModify] = -98;
+                break;
+            case -98:       // Sup
+                code[operationToModify] = -101;
                 break;
 
         }
