@@ -59,19 +59,12 @@ public class _MainRunner {
         InstructionModifier IM = new InstructionModifier();
         ClassMethods CM = new ClassMethods();
         try {
-
-            // Modification de la class source
-            List<String> AllFunctionsToModify = new ArrayList<String>();
-            AllFunctionsToModify.add("add");
-            AllFunctionsToModify.add("substract");
-            AllFunctionsToModify.add("addDouble");
-
             // Execution des tests
             System.out.println("TESTS AVANT LES MODIFICATIONS - ADD TO SUB");
-            List<String> testsClasses = new ArrayList<String>();        // TODO recuperer toutes les noms de classes
+            List<String> testsClasses = new ArrayList<String>();
             testsClasses.add("MathOperationTest");
 
-            List<String> implemClasses = new ArrayList<>();         // TODO recuperer le nom des classes d'implem
+            List<String> implemClasses = new ArrayList<>();
             implemClasses.add("MathOperation");
 
 
@@ -141,19 +134,12 @@ public class _MainRunner {
         InstructionModifier IM = new InstructionModifier();
         ClassMethods CM = new ClassMethods();
         try {
-
-            // Modification de la class source
-            List<String> AllFunctionsToModify = new ArrayList<String>();
-            AllFunctionsToModify.add("add");
-            AllFunctionsToModify.add("substract");
-            AllFunctionsToModify.add("addDouble");
-
             // Execution des tests
             System.out.println("TESTS AVANT LES MODIFICATIONS - SUB TO ADD");
-            List<String> testsClasses = new ArrayList<String>();        // TODO recuperer toutes les noms de classes
+            List<String> testsClasses = new ArrayList<String>();
             testsClasses.add("MathOperationTest");
 
-            List<String> implemClasses = new ArrayList<>();         // TODO recuperer le nom des classes d'implem
+            List<String> implemClasses = new ArrayList<>();
             implemClasses.add("MathOperation");
 
 
@@ -225,20 +211,12 @@ public class _MainRunner {
         InstructionModifier IM = new InstructionModifier();
         ClassMethods CM = new ClassMethods();
         try {
-
-            // Modification de la class source
-            List<String> AllFunctionsToModify = new ArrayList<String>();
-//            AllFunctionsToModify.add("add");
-//            AllFunctionsToModify.add("substract");
-            AllFunctionsToModify.add("multiply");
-            AllFunctionsToModify.add("divide");
-
             // Execution des tests
             System.out.println("TESTS AVANT LES MODIFICATIONS - MUL TO DIV");
-            List<String> testsClasses = new ArrayList<String>();        // TODO recuperer toutes les noms de classes
+            List<String> testsClasses = new ArrayList<String>();
             testsClasses.add("MathOperationTest");
 
-            List<String> implemClasses = new ArrayList<>();         // TODO recuperer le nom des classes d'implem
+            List<String> implemClasses = new ArrayList<>();
             implemClasses.add("MathOperation");
 
 
@@ -308,20 +286,12 @@ public class _MainRunner {
         InstructionModifier IM = new InstructionModifier();
         ClassMethods CM = new ClassMethods();
         try {
-
-            // Modification de la class source
-            List<String> AllFunctionsToModify = new ArrayList<String>();
-            AllFunctionsToModify.add("add");
-            AllFunctionsToModify.add("substract");
-            AllFunctionsToModify.add("multiply");
-            AllFunctionsToModify.add("divide");
-
             // Execution des tests
             System.out.println("TESTS AVANT LES MODIFICATIONS - DIV TO MUL");
-            List<String> testsClasses = new ArrayList<String>();        // TODO recuperer toutes les noms de classes
+            List<String> testsClasses = new ArrayList<String>();
             testsClasses.add("MathOperationTest");
 
-            List<String> implemClasses = new ArrayList<>();         // TODO recuperer le nom des classes d'implem
+            List<String> implemClasses = new ArrayList<>();
             implemClasses.add("MathOperation");
 
 
@@ -390,20 +360,12 @@ public class _MainRunner {
         SupInfModifier IM = new SupInfModifier();
         ClassMethods CM = new ClassMethods();
         try {
-
-            // Modification de la class source
-            List<String> AllFunctionsToModify = new ArrayList<String>();
-            AllFunctionsToModify.add("strictlySupp");
-            AllFunctionsToModify.add("strictlyInf");
-            AllFunctionsToModify.add("infOrEq");
-            AllFunctionsToModify.add("supOrEq");
-
             // Execution des tests
             System.out.println("TESTS AVANT LES MODIFICATIONS - InfSuppInt");
-            List<String> testsClasses = new ArrayList<String>();        // TODO recuperer toutes les noms de classes
+            List<String> testsClasses = new ArrayList<String>();
             testsClasses.add("MathSupInfTest");
 
-            List<String> implemClasses = new ArrayList<>();         // TODO recuperer le nom des classes d'implem
+            List<String> implemClasses = new ArrayList<>();
             implemClasses.add("MathSupInf");
 
 
@@ -471,20 +433,12 @@ public class _MainRunner {
         SupInfModifier IM = new SupInfModifier();
         ClassMethods CM = new ClassMethods();
         try {
-
-            // Modification de la class source
-            List<String> AllFunctionsToModify = new ArrayList<String>();
-            AllFunctionsToModify.add("strictlySupp");
-            AllFunctionsToModify.add("strictlyInf");
-            AllFunctionsToModify.add("infOrEq");
-            AllFunctionsToModify.add("supOrEq");
-
             // Execution des tests
             System.out.println("TESTS AVANT LES MODIFICATIONS - InfSuppOther");
-            List<String> testsClasses = new ArrayList<String>();        // TODO recuperer toutes les noms de classes
+            List<String> testsClasses = new ArrayList<String>();
             testsClasses.add("MathSupInfTest");
 
-            List<String> implemClasses = new ArrayList<>();         // TODO recuperer le nom des classes d'implem
+            List<String> implemClasses = new ArrayList<>();
             implemClasses.add("MathSupInf");
 
 
@@ -552,19 +506,12 @@ public class _MainRunner {
         VoidModifier IM = new VoidModifier();
         ClassMethods CM = new ClassMethods();
         try {
-
-            // Modification de la class source
-            List<String> AllFunctionsToModify = new ArrayList<String>();
-            AllFunctionsToModify.add("isBooleanTest");
-            AllFunctionsToModify.add("testFunction");
-
-
             // Execution des tests
             System.out.println("TESTS AVANT LES MODIFICATIONS - VOID ERASING");
-            List<String> testsClasses = new ArrayList<String>();        // TODO recuperer toutes les noms de classes
+            List<String> testsClasses = new ArrayList<String>();
             testsClasses.add("VoidClassTest");
 
-            List<String> implemClasses = new ArrayList<>();         // TODO recuperer le nom des classes d'implem
+            List<String> implemClasses = new ArrayList<>();
             implemClasses.add("VoidClass");
 
 

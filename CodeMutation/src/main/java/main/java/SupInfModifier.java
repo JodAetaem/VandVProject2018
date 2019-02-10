@@ -147,9 +147,6 @@ public class SupInfModifier {
         return positionModified;
     }
 
-    //todo: refaire dans  instruction modifier: inverse operaterAtPosition et countOperationInClass
-    //et ajouter un mutationAnalysis suoinf
-
     public int countSupInfInClass(String pathToSourceClasses, String className, String functionName, String operation) throws NotFoundException {
         int nbOperation = 0;
 

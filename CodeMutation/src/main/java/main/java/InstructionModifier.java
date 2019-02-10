@@ -23,9 +23,6 @@ public class InstructionModifier {
      */
     public void addToSub(String pathToSourceClasses, String pathToOutputFolder, List<String> ListFunctionName) throws NotFoundException, CannotCompileException, IOException {
         ClassPool pool = ClassPool.getDefault();
-
-        //final String inputFolder = "./SourceCode/target/classes/";
-        //final String outputFolder = "./SourceModifiedCode/target/classes/";
         //Choose the folder where the sources are
         pool.appendClassPath(pathToSourceClasses);
 
